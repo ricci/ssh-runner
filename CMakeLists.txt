@@ -9,7 +9,7 @@ set (CMAKE_MODULE_PATH
 
 # Find the required Libaries
 find_package (Qt5 REQUIRED CONFIG COMPONENTS Widgets Core Xml)
-find_package (KF5 REQUIRED COMPONENTS KIO I18n Service Runner Plasma)
+find_package (KF5 REQUIRED COMPONENTS KIO I18n Service Runner Plasma CoreAddons)
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)

@@ -30,6 +30,7 @@
 
 #include <KLocalizedString>
 #include <krun.h>
+#include <KShell>
 
 #include <iostream>
 
@@ -180,7 +181,7 @@ void SSHRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMat
 	Q_UNUSED(context);
 
 	QString host = match.data().toString();
-	KRun::shellQuote(host);
+	KShell::quoteArg(host);
 
 	QString command = QString("ssh %1").arg(host);
 

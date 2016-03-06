@@ -20,7 +20,7 @@
 #ifndef SSHRUNNER_H
 #define SSHRUNNER_H
 
-#include <Plasma/AbstractRunner>
+#include <KRunner/AbstractRunner>
 
 class SSHConfigReader;
 
@@ -28,7 +28,7 @@ class SSHRunner : public Plasma::AbstractRunner {
 	public:
 		SSHRunner(QObject *parent, const QVariantList& args);
 		~SSHRunner();
-		KIcon mIcon;
+		QIcon mIcon;
 
 		void match(Plasma::RunnerContext &context);
 		void run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match);

@@ -15,21 +15,21 @@
  *   You should have received a copy of the GNU General Public
  *   License along with this program; if not, write to the
  *   Free Software Foundation, Inc.,
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA. */
 
 #include <QDir>
 #include <QDomDocument>
 #include <QFile>
+#include <QTextStream>
 #include <QFileInfo>
 #include <QHash>
 #include <QMutexLocker>
 #include <QProcess>
+#include <QAction>
+#include <QIcon>
 
-#include <KAction>
-#include <KDebug>
-#include <KIcon>
-#include <KRun>
+#include <KLocalizedString>
+#include <krun.h>
 
 #include <iostream>
 
@@ -114,7 +114,7 @@ public:
 };
 
 SSHRunner::SSHRunner(QObject *parent, const QVariantList& args) : Plasma::AbstractRunner(parent, args), rd( 0 ) {
-	mIcon = KIcon("utilities-terminal");
+	mIcon = QIcon::fromTheme("utilities-terminal");
 	rd = new SSHConfigReader;
 	setObjectName("SSH Host runner");
 	setSpeed(AbstractRunner::SlowSpeed);
@@ -173,7 +173,7 @@ void SSHRunner::match(Plasma::RunnerContext &context) {
 		matches << match;
 	}
 
-	context.addMatches(context.query(), matches);
+	context.addMatches(matches);
 }
 
 void SSHRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match) {
@@ -208,3 +208,4 @@ QList<QAction*> SSHRunner::actionsForMatch(const Plasma::QueryMatch &match) {
 	return ret;
 }
 
+#include "moc_ssh.cpp"

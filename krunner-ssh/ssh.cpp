@@ -183,7 +183,7 @@ void SSHRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMat
 
 	QString command = QString("ssh %1").arg(host);
 
-	QString konsole_command = QString("konsole -e %1").arg(command);
+	QString konsole_command = QString("termite -e \"%1\"").arg(command);
 
 	KRun::runCommand(konsole_command, 0);
 }

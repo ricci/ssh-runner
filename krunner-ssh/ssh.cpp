@@ -31,6 +31,9 @@
 #include <KLocalizedString>
 #include <krun.h>
 #include <KShell>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KSharedConfig>
 
 #include <iostream>
 
@@ -183,7 +186,9 @@ void SSHRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMat
 
 	QString command = QString("ssh %1").arg(host);
 
-	QString konsole_command = QString("termite -e \"env TERM=xterm-color %1\"").arg(command);
+        KConfigGroup config(KSharedConfig::openConfig(QStringLiteral("kdeglobals")), "General");
+        QString terminal = config.readPathEntry("TerminalApplication",QStringLiteral("konsole"));
+	QString konsole_command = QString(terminal+" -e \"%1\"").arg(command);
 
 	KRun::runCommand(konsole_command, 0);
 }

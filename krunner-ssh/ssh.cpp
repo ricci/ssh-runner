@@ -42,6 +42,10 @@
 struct SSHHost
 {
 	QString name;
+	bool operator== (const SSHHost &b) const
+        {
+            return (name == b.name);
+        }
 };
 
 class SSHConfigReader
@@ -99,7 +103,9 @@ public:
                                         SSHHost host;
                                         host.name = hostname;
 
-                                        (*list) << host;
+                                        if (!list->contains(host)) {
+                                                (*list) << host;
+                                        }
                                 }
                         }
 
@@ -126,7 +132,9 @@ public:
                                 SSHHost host;
                                 host.name = hostname;
 
-                                (*list) << host;
+                                if (!list->contains(host)) {
+                                        (*list) << host;
+                                }
                         }
 
                         knownhosts.close();

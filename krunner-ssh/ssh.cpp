@@ -218,7 +218,7 @@ void SSHRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMat
 
         KConfigGroup config(KSharedConfig::openConfig(QStringLiteral("kdeglobals")), "General");
         QString terminal = config.readPathEntry("TerminalApplication",QStringLiteral("konsole"));
-	QString konsole_command = QString(terminal+" -e %1").arg(command);
+	QString konsole_command = QString(terminal+" -e \'%1\'").arg(command);
 
 	KRun::runCommand(konsole_command, 0);
 }

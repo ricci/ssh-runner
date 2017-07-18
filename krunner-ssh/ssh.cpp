@@ -31,9 +31,6 @@
 #include <KLocalizedString>
 #include <krun.h>
 #include <KShell>
-#include <KConfig>
-#include <KConfigGroup>
-#include <KSharedConfig>
 
 #include <iostream>
 
@@ -66,9 +63,11 @@ public:
 		QMutexLocker _ml(&mutex);
 		QDir dir(sshdir);
 
-		QString config_path = dir.filePath("known_hosts");
+		QString config_path = dir.filePath("config");
+		QString knownhosts_path = dir.filePath("known_hosts");
 
-		if (list && lastChecked >= QFileInfo(config_path).lastModified()) {
+		if (list && lastChecked >= QFileInfo(config_path).lastModified() &&
+		            lastChecked >= QFileInfo(knownhosts_path).lastModified()) {
 			return;
 		}
 
@@ -77,31 +76,58 @@ public:
 		list = new QList<SSHHost>;
 
 		QFile config(config_path);
-		if (!config.open(QIODevice::ReadOnly)) {
-			return;
-		}
+		if (config.open(QIODevice::ReadOnly)) {
 
-		QTextStream stream(&config);
-		stream.setCodec("UTF-8");
+                        QTextStream stream(&config);
+                        stream.setCodec("UTF-8");
 
-		while (!stream.atEnd()) {
-			QString line = stream.readLine();
+                        while (!stream.atEnd()) {
+                                QString line = stream.readLine();
 
-			line = line.trimmed();
-			if (line.isEmpty()) {
-				continue;
-			}
+                                line = line.trimmed();
+                                if (line.isEmpty()) {
+                                        continue;
+                                }
 
-                        QString hostnamelong = line.section(" ",0,0);
-                        QString hostname = hostnamelong.section(",",0,0);
+                                if (line.startsWith("host ", Qt::CaseInsensitive)) {
 
-                        SSHHost host;
-                        host.name = hostname;
+                                        QString hostname = line.mid(5).trimmed();
 
-                        (*list) << host;
-		}
+                                        SSHHost host;
+                                        host.name = hostname;
 
-		config.close();
+                                        (*list) << host;
+                                }
+                        }
+
+                        config.close();
+                }
+
+		QFile knownhosts(knownhosts_path);
+		if (knownhosts.open(QIODevice::ReadOnly)) {
+
+                        QTextStream stream(&knownhosts);
+                        stream.setCodec("UTF-8");
+
+                        while (!stream.atEnd()) {
+                                QString line = stream.readLine();
+
+                                line = line.trimmed();
+                                if (line.isEmpty()) {
+                                        continue;
+                                }
+
+                                QString hostnameandIP = line.section(" ",0,0);
+                                QString hostname = hostnameandIP.section(",",0,0);
+
+                                SSHHost host;
+                                host.name = hostname;
+
+                                (*list) << host;
+                        }
+
+                        knownhosts.close();
+                }
 
 		lastChecked = QDateTime::currentDateTime();
 
